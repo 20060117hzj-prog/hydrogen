@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+
+# 虚拟环境
+venv/
+.venv/
+
+# 大文件 / 生成文件
+*.pkl
+*.db
+*.pdf
+USGS_Natural_Gas_Dataset.csv
+hydrogen_training_dataset.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude 本地配置
+.claude/settings.json
+.claude/settings.local.json
+.claude/skills/
+.agents/
+skills-lock.json
+
+# 临时文件
+*.backup
+zgonnik_text.txt

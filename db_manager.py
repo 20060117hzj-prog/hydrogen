@@ -2,11 +2,31 @@
 数据库管理模块 — SQLite 数据访问层
 提供训练数据管理、预测历史记录两大核心功能。
 """
-import sqlite3
-import pandas as pd
 import os
+import sqlite3
+import sys
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "hydrogen_system.db")
+import pandas as pd
+
+
+def _data_dir() -> str:
+    """返回可持久化的数据目录。
+
+    源码运行时使用脚本所在目录；PyInstaller 打包后 __file__ 指向临时解压
+    目录（%TEMP%\_MEIxxxx），退出即被删除，因此改用 LOCALAPPDATA。
+    """
+    if getattr(sys, "frozen", False):
+        base = os.path.join(
+            os.environ.get("LOCALAPPDATA", os.path.expanduser("~")),
+            "HydrogenSystem",
+        )
+    else:
+        base = os.path.dirname(os.path.abspath(__file__))
+    os.makedirs(base, exist_ok=True)
+    return base
+
+
+DB_PATH = os.path.join(_data_dir(), "hydrogen_system.db")
 
 
 def _get_conn() -> sqlite3.Connection:
@@ -79,7 +99,7 @@ def seed_training_data():
         if count > 0:
             return  # 已有数据，跳过
 
-        csv_path = os.path.join(os.path.dirname(__file__), "hydrogen_training_dataset.csv")
+        csv_path = os.path.join(os.path.dirname(__file__), "hydrogen_realistic_dataset.csv")
         if not os.path.exists(csv_path):
             raise FileNotFoundError(
                 f"数据集文件未找到: {csv_path}，请先运行 build_dataset.py 生成数据集。"
